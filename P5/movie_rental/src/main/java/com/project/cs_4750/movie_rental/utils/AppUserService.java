@@ -27,4 +27,32 @@ public class AppUserService {
 
         return appUserRepository.save(user);
     }
+
+    public boolean updateUser(Long userId, String newPassword, String username, int isActiveAccount) {
+        // Retrieve the user from the database
+        AppUser appUser = appUserRepository.findById(userId).orElse(null);
+
+        if (appUser != null) {
+            if (newPassword != null){
+                byte[] encryptedPassword = encryptionService.encryptPassword(newPassword);
+                appUser.setEncryptedPassword(encryptedPassword);
+                appUser.setPassword(newPassword);
+            }
+            
+            if (username != null){
+                appUser.setUsername(username);
+            }
+
+    
+            appUser.setIsActiveAccount(isActiveAccount);
+            
+            
+
+
+            // Save the updated user entity to the database
+            appUserRepository.save(appUser);
+            return true;
+        }
+        return false;
+    }
 }

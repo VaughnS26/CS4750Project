@@ -46,17 +46,16 @@ public class AppUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppUser> updateActor(@PathVariable long id, @RequestBody AppUser appUserDetails) {
-        return appUserRepository.findById(id)
-                .map(appUser -> {
-                    appUser.setUsername(appUserDetails.getUsername());
-                    appUser.setPassword(appUserDetails.getPassword());
-                    appUser.setIsActiveAccount(appUserDetails.getIsActiveAccount());
-                    appUser.setEncryptedPassword(appUserDetails.getEncryptedPassword());
-                    appUserRepository.save(appUser);
-                    return ResponseEntity.ok(appUser);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody AppUser userRequest) {
+        // Call the service to update the user's username and password
+
+        boolean updated = appUserService.updateUser(id, userRequest.getPassword(), userRequest.getUsername(), userRequest.getIsActiveAccount());
+
+        if (updated) {
+            return ResponseEntity.ok("User updated successfully!");
+        } else {
+            return ResponseEntity.status(404).body("User not found!");
+        }
     }
 
     @DeleteMapping("/{id}")

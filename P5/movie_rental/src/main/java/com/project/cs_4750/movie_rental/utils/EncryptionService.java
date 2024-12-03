@@ -35,7 +35,6 @@ public class EncryptionService {
                 }
                 return null;
             } catch (SQLException e) {
-                e.printStackTrace(); // Proper error handling can be added
                 return null;
             }
         });

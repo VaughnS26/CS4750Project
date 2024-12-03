@@ -16,6 +16,7 @@ public class EncryptionService {
     private JdbcTemplate jdbcTemplate;
 
     public byte[] encryptPassword(String password) {
+        //Used ChatGPT to figure out how to use CallableStatements for autoencryption
         String encryptQuery =
             "OPEN SYMMETRIC KEY AppUserPasswordKey DECRYPTION BY CERTIFICATE AppUserCert;" +
             "DECLARE @EncryptedPassword VARBINARY(128);" +
@@ -25,10 +26,8 @@ public class EncryptionService {
 
         return jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(encryptQuery)) {
-                // Set the password parameter to be encrypted
                 callableStatement.setString(1, password);
                 
-                // Execute the query and retrieve the encrypted password
                 ResultSet rs = callableStatement.executeQuery();
                 if (rs.next()) {
                     return rs.getBytes("EncryptedPassword");

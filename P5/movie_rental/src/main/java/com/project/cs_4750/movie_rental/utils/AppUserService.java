@@ -21,7 +21,6 @@ public class AppUserService {
         user.setPassword(password);
         user.setIsActiveAccount(isActiveAccount);
 
-        // Encrypt the password
         byte[] encryptedPassword = encryptionService.encryptPassword(password);
         user.setEncryptedPassword(encryptedPassword);
 
@@ -29,7 +28,6 @@ public class AppUserService {
     }
 
     public boolean updateUser(Long userId, String newPassword, String username, int isActiveAccount) {
-        // Retrieve the user from the database
         AppUser appUser = appUserRepository.findById(userId).orElse(null);
 
         if (appUser != null) {
@@ -42,14 +40,9 @@ public class AppUserService {
             if (username != null){
                 appUser.setUsername(username);
             }
-
-    
+   
             appUser.setIsActiveAccount(isActiveAccount);
             
-            
-
-
-            // Save the updated user entity to the database
             appUserRepository.save(appUser);
             return true;
         }
